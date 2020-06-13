@@ -1,0 +1,8 @@
+{
+    "pluginsFile": "cypress/plugins/index.js",
+    "baseUrl": "https://medscape-live-web.k8s.qa.medscape.com/",
+    "testFiles": "**/*.{feature,features}",
+    "env": {
+        "TAGS": ""
+    }    
+}
