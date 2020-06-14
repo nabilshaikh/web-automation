@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+/* /// <reference types="cypress" />
 
 import { Before, Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
 import Home from '../pages/Home';
@@ -9,7 +9,7 @@ const events = new Events()
 
 /* Before(() => {
     cy.visit('/')
-}) */
+}) 
 
 Given('User should see logo on header', () => {
     home.getMedscapeLiveLogo().should('be.visible')
@@ -80,3 +80,4 @@ And('User sees the content as {string}', (about) => {
 
 
 
+ */
