@@ -15,46 +15,29 @@ Given('User is on home screen', () => {
 
 And('User sees the welcome text as {string}', (welcomeText) => {
     home.getWelcomeText().contains(welcomeText)
-    /* cy.get('[data-test=home-search__hero-img]')
-    .find('.home-search__welcome-text')
-    .contains(welcomeText) */
 })
 
 And('User verifies no sticky header is present', () => {
     home.getStickyHeader().should('not.be.visible')  
-    /* cy.get('[data-test=medscape-live-header]')
-    .should('not.be.visible') */
 })
 
 And('User sees the -Medscape LIVE!- logo on header', () => {
     home.getMedscapeLiveLogo().should('be.visible')
-    /* cy.get('[data-test=home-search__header]')
-    .find('[aria-label="Home Search Medscape Live Logo"]')
-    .should('be.visible') */
     home.getStickyMedscapeLiveLogo().should('not.be.visible')
-    /* cy.get('[data-test=header__medscape-icon-router]')
-    .should('not.be.visible') */
 })
 
 And('User verifies logo is non-clickable', () => {
     home.getMedscapeLiveLogo().should('not.have.attr', 'href')
-    /* cy.get('[data-test=home-search__header]')
-    .find('[aria-label="Home Search Medscape Live Logo"]')
-    .should('not.have.attr', 'href') */
 })
 
 And('User sees the -About Medscape LIVE- button on header', () => {
     home.getAboutButton().should('be.visible')
-    /* cy.get('[data-test=home-search__header-about]')
-    .should('be.visible') */
 })
 
 And('User verifies about button is clickable', () => {
-    //cy.get('[data-test=home-search__header-about]')
     home.getAboutButton()
     .should('have.attr', 'href').then(() => {
         home.getAboutButton().click()
-        //cy.get('[data-test=home-search__header-about]').click()
         cy.url().should('contain', 'about').then(() => {
             cy.go('back')
              cy.url().should('eq', Cypress.config().baseUrl)
@@ -66,7 +49,6 @@ And('User verifies about button is clickable', () => {
 
 Given('User sees the hero image on home screen', () => {
     home.getHeroImage().should('be.visible')
-    //cy.get('[data-test=home-search__hero-img]').should('be.visible')
 })
 
 When('User scroll past the hero image', () => {
@@ -75,42 +57,28 @@ When('User scroll past the hero image', () => {
 
 Then('User should see the sticky header', () => {
     home.getStickyHeader().should('be.visible')
-    /* cy.get('[data-test=medscape-live-header]')
-    .should('be.visible') */
 })
 
 And('User sees the -Medscape LIVE!- logo on sticky header', () => {
     home.getStickyMedscapeLiveLogo().should('be.visible')
-    /* cy.get('[data-test=medscape-live-header]')
-    .find('[data-test=header__medscape-icon-router]')
-    .should('be.visible') */
 })
 
 And('User verifies logo is clickable', () => {
     home.getStickyMedscapeLiveLogo()
-    /* cy.get('[data-test=medscape-live-header]')
-    .find('[data-test=header__medscape-icon-router]') */
     .should('have.attr', 'href').then(() => {
         home.getStickyMedscapeLiveLogo().click()
-        //cy.get('[data-test=header__medscape-icon-router]').click()
         cy.url().should('eq', Cypress.config().baseUrl)
     })
 })
 
 And('User sees the -About Medscape LIVE- button on sticky header', () => {
     home.getStickyAboutButton().should('be.visible')
-    /* cy.get('[data-test=medscape-live-header]')
-    .find('[data-test=header__about-button]')
-    .should('be.visible') */
 })
 
 And('User verifies about button is clickable on sticky header', () => {
     home.getStickyAboutButton()
-    /* cy.get('[data-test=medscape-live-header]')
-    .find('[data-test=header__about-button]') */
     .should('have.attr', 'href').then(() => {
         home.getStickyAboutButton().click()
-        //cy.get('[data-test=header__about-button]').click()
         cy.url().should('contain', 'about').then(() => {
             cy.go('back')
         })
@@ -125,9 +93,6 @@ When('User scroll down to the bottom of page', () => {
 
 Then('User verifies sticky header does not get hide', () => {
     home.getStickyHeader().should('be.visible')
-    /* cy.get('[data-test=medscape-live-header]')
-    .find('[data-test=header__medscape-icon-router]')
-    .should('be.visible') */
 })
 
 
