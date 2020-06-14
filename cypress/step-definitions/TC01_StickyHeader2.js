@@ -2,10 +2,8 @@
 
 import {Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
 import Home from '../pages/Home';
-import Events from '../pages/Events';
 
 const home = new Home()
-const events = new Events()
 
 /* Scenario1: Verify header on home screen */
 
