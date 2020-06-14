@@ -1,7 +1,7 @@
 # Story  : 1) LBU-97-Medscape live logo in sticky header        
 
 Feature: Medscape-Live sticky header
-    @focus
+    
     Scenario: Verify header on home screen
         Given User is on home screen
         And User sees the welcome text as 'Hundreds of top live events for medical professionals!'
@@ -10,7 +10,7 @@ Feature: Medscape-Live sticky header
         And User verifies logo is non-clickable
         And User sees the -About Medscape LIVE- button on header
         And User verifies about button is clickable
-    @focus
+    
     Scenario: Verify sticky header on home screen
         Given User sees the hero image on home screen
         When User scroll past the hero image
@@ -19,7 +19,7 @@ Feature: Medscape-Live sticky header
         And User verifies logo is clickable
         And User sees the -About Medscape LIVE- button on sticky header
         And User verifies about button is clickable on sticky header
-    @focus
+    
     Scenario: Verify sticky header on events screen
         Given User is on home screen
         When User clicks on Search button
