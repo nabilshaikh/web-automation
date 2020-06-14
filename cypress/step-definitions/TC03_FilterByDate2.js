@@ -15,9 +15,46 @@ const localCurrentDate = Cypress.moment().format('DD')
 let futureDate
 let pastDate
 
-Before(() => {
-  cy.visit('/')
+/* Scenario1: Look & feel of date filter */
+
+Given('User verifies date filter is present on home screen', () => {
+  cy.get('[data-test=live-event-search__start-date-select]')
+  .should('be.visible')
 })
+
+And('User sees the placeholder text as {string} on date filter', (anyDates) => {
+  cy.get('[data-test=live-event-search__start-date-select]')
+    .invoke('attr', 'placeholder')
+    .should('contain', anyDates)
+})
+
+When('User clicks on date filter', () => {
+  cy.get('[data-test=live-event-search__start-date-select]').click()
+})
+
+Then('User sees {string} placeholder text gets changed to {string} & {string} date input fields', (anyDates, from, to) => {
+  cy.get('[data-test=live-event-search__start-date-select]')
+    .invoke('attr', 'placeholder')
+    .should('not.contain', anyDates)
+  cy.get('[data-test=live-event-search__start-date-select]')
+    .invoke('attr', 'placeholder')
+    .should('contain', from)
+  cy.get('[data-test=live-event-search__end-date-select]')
+    .invoke('attr', 'placeholder')
+    .should('contain', to)
+})
+
+And('User sees the calendar dropdown', () => {
+  cy.get('[data-test=live-event-search__date-picker]')
+  .find('.v-date-picker-table')
+  .should('be.visible')
+})
+
+/* Scenario2: User searches for events - From (current-date) & To (current-date) */
+
+
+
+
 
 When('test', () => {
 
@@ -127,9 +164,7 @@ And('User sees the placeholder text as {string}', (anyDate) => {
     .should('contain', anyDate)
 })
 
-When('User clicks on Start date', () => {
-  cy.get('[data-test=live-event-search__start-date-select]').click()
-})
+
 
 Then('User should see the date picker highlighting the current date', () => {
   cy.get('.v-date-picker-table__current > div').should(($div) => {
