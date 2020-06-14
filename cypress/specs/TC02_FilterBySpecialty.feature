@@ -1,18 +1,18 @@
 # Story      : LBU-100 (Filter events by specialty from the home page)
 
 Feature: Filter events by specialty
-    @focus
+    
     @SpecialtyFilter
-    Scenario: User verifies the look & feel of specialty filter
+    Scenario: Look & feel of specialty filter
         Given User verifies specialty filter is present on home screen
         And User sees the placeholder text as 'Any specialty'
         When User clicks on specialty filter
-        Then User should see the list box which contains all possible specialties
+        #Then User should see the list box which contains all possible specialties
         When User type in incomplete specialty as 'Cardiolo'
         Then User should see only one matching row containing 'Cardiology' in list box
     
     @SpecialtyFilter    
-    Scenario: User searches for events based on incorrect specialty
+    Scenario: Search events based on incorrect specialty
         When User type in incorrect specialty as "Caardiology"
         Then User should see the message as "No data available" in list box
         And User clicks on Search button
@@ -22,7 +22,7 @@ Feature: Filter events by specialty
         But Not based on incorrect specialty "Caardiology"
     
     @SpecialtyFilter
-    Scenario Outline: User searches for events based on correct specialty
+    Scenario Outline: Search events based on correct specialty
         When User clicks on specialty filter
         And User selects option as "<specialty>"
         And User clicks on Search button
