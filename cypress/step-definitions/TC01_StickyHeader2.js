@@ -12,7 +12,10 @@ Given('User is on home screen', () => {
 })
 
 And('User sees the welcome text as {string}', (welcomeText) => {
-    home.getWelcomeText().contains(welcomeText)
+    home.getWelcomeText().then((captureWelcomeText) => {
+        const displayWelcomeText = captureWelcomeText.text()
+        expect(displayWelcomeText.trim()).to.equal(welcomeText)
+    })
 })
 
 And('User verifies no sticky header is present', () => {

@@ -30,9 +30,7 @@ class Home{
 
     getStickyAboutButton(){
         return cy.get('[data-test=header__about-button]')
-    }
-
-    
+    }    
 
     /*                                               */
 
@@ -46,6 +44,28 @@ class Home{
 
     getFilterListBox(){
         return cy.get('.v-select-list:visible').find('.v-list-item')//.find('.v-list-item__content:visible')
+    }
+
+    getDateFilter(){
+        return cy.get('[data-test=live-event-search__start-date-select]')
+    }
+
+    getFromDate(){
+        return cy.get('[data-test=live-event-search__start-date-select]')
+    }
+
+    getToDate(){
+        return cy.get('[data-test=live-event-search__end-date-select]')
+    }
+
+    getCalendarDropdown(){
+        return cy.get('[data-test=live-event-search__date-picker]')
+        .find('.v-date-picker-table')
+    }
+
+    getDateErrorMessage(){
+        return cy.get('[data-test=home-search__hero-img]')
+        .find('.v-messages__message')
     }
 
     getSearchButton(){
