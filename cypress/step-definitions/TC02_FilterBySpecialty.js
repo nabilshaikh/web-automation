@@ -6,7 +6,8 @@ import Events from '../pages/Events';
 
 const home = new Home()
 const events = new Events() 
-//Scenario-1
+
+/* Scenario1: Look & feel of specialty filter */
 
 Given('User verifies specialty filter is present on home screen', () => {
     home.getSpecialtyFilter().should('be.visible')
@@ -48,7 +49,7 @@ Then('User should see only one matching row containing {string} in list box', (s
     })
 })
 
-//Scenario-2
+/* Scenario2: Search events based on incorrect specialty */
 
 When('User type in incorrect specialty as {string}', (incorrectSpecialty) => {
     home.getSpecialtyFilter()
@@ -84,7 +85,7 @@ But('Not based on incorrect specialty {string}', (incorrectSpecialty) => {
       .should('not.contain', incorrectSpecialty)
 })
 
-//Scenario-3
+/* Scenario3: Search events based on correct specialty */
 
 And('User selects option as {string}', (specialty) => {
     cy.get('.v-select-list')
