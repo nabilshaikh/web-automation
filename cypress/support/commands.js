@@ -23,3 +23,22 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import {EVENT_SERVICE_SEARCH_FILTERS, EVENT_SERVICE_SEARCH} from '../support/global-constant.js'
+
+var locations
+
+before(() => {
+    console.log('after initiation')
+    cy.request(EVENT_SERVICE_SEARCH_FILTERS)
+    .then((response) => {
+    var specialties = response.body.searchFilters
+    console.log('locations')
+    locations = specialties.map(function(item) {
+        return item.locations;
+    });
+}) 
+
+})
+Cypress.Commands.add('getAllLocation', () => {
+    return locations
+})

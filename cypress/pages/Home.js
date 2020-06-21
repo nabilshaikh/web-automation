@@ -43,7 +43,7 @@ class Home{
     }
 
     getFilterListBox(){
-        return cy.get('.v-select-list:visible').find('.v-list-item')//.find('.v-list-item__content:visible')
+        return cy.get('div.v-select-list:visible')//.find('.v-list-item__content:visible')
     }
 
     getDateFilter(){

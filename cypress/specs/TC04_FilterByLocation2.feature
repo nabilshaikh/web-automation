@@ -1,9 +1,9 @@
 # Story      : LBU-101-Filter events by location from homepage
 
 Feature: Filter events by location
-    
+    @focus
     @LocationFilter
-    Scenario: User verifies the look & feel of location filter
+    Scenario: Look & feel of location filter
         Given User verifies location filter is present on home screen
         And User sees the location placeholder text as 'Any location' 
         When User clicks on location filter
@@ -12,34 +12,34 @@ Feature: Filter events by location
         Then User should see only one matching row containing 'Online' in list box
     
     @LocationFilter
-    Scenario: User searches for events based on incorrect location
-        When User type in incorrect location as "Onnline"
+    Scenario: Search for events based on incorrect location
+        When User type in incorrect location as 'Onnline'
         Then User should see the message as "No data available" in list box
         And User clicks on Search button
-        Then User should navigate to "events" screen
+        Then User should navigate to 'events' screen
         And User sees the URL parameter as - specialty='allspecialty'
         And User verifies the list of returned events is based on - specialty='allspecialty'
-        But Not based on incorrect location "Onnline"
+        But Not based on incorrect location 'Onnline'
     
     @LocationFilter
-    Scenario: User searches for events based on correct location        
+    Scenario: Search for events based on correct location        
         When User clicks on location filter
-        And User selects the second -2- option from list-box
+        And User selects the -2- option from list-box
         And User clicks on Search button
-        Then User should navigate to "events" screen 
-        And User sees the URL parameter as - specialty='allspecialty'&location=SECOND-OPTION
-        And User verifies the list of returned events is based on selected location 
+        Then User should navigate to 'events' screen 
+        And User sees the URL parameter as - specialty='allspecialty'&location=2
+        And User verifies the list of returned events is based on selected location -2- 
             
     @LocationFilter @SpecialtyFilter
-    Scenario Outline: User searches for events based on specialty + location
+    Scenario Outline: Search for events based on specialty + location
         When User clicks on specialty filter
-        And User selects option as "<SPECIALTY>"
+        And User selects option as '<SPECIALTY>'
         And User clicks on location filter
-        And User selects the second -2- option from list-box
+        And User selects the -2- option from list-box
         And User clicks on Search button
-        Then User should navigate to "events" screen  
-        And User sees the URL parameter as - specialty='<SPECIALTY>'&location=SECOND-OPTION
-        And User verifies the list of returned events is based on selected '<SPECIALTY>' & location
+        Then User should navigate to 'events' screen  
+        And User sees the URL parameter as - specialty='<SPECIALTY>'&location=2
+        And User verifies the list of returned events is based on selected '<SPECIALTY>' & location -2-
     
     Examples:
         |SPECIALTY|      

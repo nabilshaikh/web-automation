@@ -1,19 +1,24 @@
-import {Given, When, Then, And} from "cypress-cucumber-preprocessor/steps";
+import {Given, When, Then, And, Before} from "cypress-cucumber-preprocessor/steps";
 import {EVENT_SERVICE_SEARCH_FILTERS, EVENT_SERVICE_SEARCH} from '../support/global-constant.js'
+import {getLocations} from '../support/networking.js'
+
 import Home from '../pages/Home';
 import Events from '../pages/Events';
 
 const home = new Home()
 const events = new Events() 
 
-var matchingLocation
-var secondLocation
-var thirdLocation
-var fourthLocation
-var getSecondLocation
+//var getSecondLocation
  
+Before(() => {
+  //cy.server()
+  //cy.route(EVENT_SERVICE_SEARCH_FILTERS).as('searchFilters')    
+  //console.log('during visit')
+  cy.visit('/')
+  //cy.wait('@searchFilters')
+})
 
-//Scenario-1
+/* Scenario1: Look & feel of location filter */
 
 Given('User verifies location filter is present on home screen', () => {
   home.getLocationFilter().should('be.visible')
@@ -24,20 +29,22 @@ And('User sees the location placeholder text as {string}', (placeholder) => {
 })
 
 When('User clicks on location filter', () => {
+  cy.scrollTo('top')
   home.getLocationFilter().should('be.visible').click()
+
+  console.log(cy.getAllLocation())
+  //cy.log('locations: ' + locations)
 })
 
 Then('User should see the list box which contains all possible locations', () => {
-    cy.request(EVENT_SERVICE_SEARCH_FILTERS)
-      .then((response) => {
-          var specialties = response.body.searchFilters
-          var locations = specialties.map(function(item) {
-              return item.locations;
-            });
-            locations[0].forEach(($loc) => {
-            home.getFilterListBox().contains($loc).should('exist')
-        })
-    })    
+  //const locations = getLocations()
+  cy.getAllLocation().then((locations) => {
+    cy.log('locations: ' + locations)
+  locations[0].forEach(($loc) => {
+  home.getFilterListBox().contains($loc).should('exist')
+  })
+})  
+      
 })
 
 When('User type in incomplete location as {string}', (location) => {
@@ -52,7 +59,7 @@ Then('User should see only one matching row containing {string} in list box', (l
   })
 })
 
-//Scenario-2
+/* Scenario2: Search for events based on incorrect location */
 
 When('User type in incorrect location as {string}', (incorrectLocation) => {
   home.getLocationFilter()
@@ -71,32 +78,83 @@ But('Not based on incorrect location {string}', (incorrectLocation) => {
       .should('not.contain', incorrectLocation)
 })
 
-//Scenario3
+/* Scenario3: Search for events based on correct location */
 
-And('User selects the second -{int}- option from list-box', (index) => {
-    home.getLocationFilter().then(() => {
-      home.getFilterListBox().eq(index-1).then((el) => {
-        getSecondLocation = el.text()
-      })
-      home.getFilterListBox().eq(index-1).click()
-    })    
+And('User selects the -{int}- option from list-box', (index) => {
+  
+  /* home.getFilterListBox().find('.v-list-item:visible')
+  .eq(index-1)
+  .then((el) => {
+    getSecondLocation = el.text()
+    cy.log('getSecondLocation' + getSecondLocation)
+  }) */
+  home.getFilterListBox().find('.v-list-item:visible').contains(getLocations()[0][index-1]).click({force:true})
+  /* home.getLocationFilter().siblings()
+  .invoke('removeAttr', 'type')
+  .invoke('attr', 'value').then((el) => {
+    getSecondLocation = el
+    cy.log(getSecondLocation)
+  }) */
+
+
+  // from other workspace
+
+  /* 
+cy.getAllLocation().then((locations) => {
+  console.log('location[0]: ' + locations[0][index - 1])
+  home
+    .getFilterListBox()
+    //.find('.v-list-item:visible')
+    .contains(locations[0][index - 1])
+    .click({ force: true })
+  })
+
+   */
+  /* home.getFilterListBox().find('.v-list-item:visible')
+  .eq(index-1)
+  .then((el) => {
+    getSecondLocation = el.text()
+    cy.log('getSecondLocation' + getSecondLocation)
+  }) */
+
+  //
+
+  /* home
+    .getFilterListBox()
+    .find('.v-list-item:visible')
+    //.contains(getLocations()[0][index - 1])
+    .contains(getLocations()[0][index - 1])
+    .click({ force: true }) */
+
+  //
+
+  /* home.getLocationFilter().siblings()
+  .invoke('removeAttr', 'type')
+  .invoke('attr', 'value').then((el) => {
+    getSecondLocation = el
+    cy.log(getSecondLocation)
+  }) */
+
+
+
 })
 
-And('User sees the URL parameter as - specialty={string}&location=SECOND-OPTION', (specialty) => {
-  var location = getSecondLocation.replace(" ", "%20");
+And('User sees the URL parameter as - specialty={string}&location={int}', (specialty, index) => {
+  //var location = getSecondLocation.replace(" ", "%20");
+  var location = encodeURI(getLocations()[0][index-1])
   cy.url()
     .should('include', 'specialty='+specialty.toLowerCase()+'&location='+location)
 })
 
-And('User verifies the list of returned events is based on selected location', () => {
-    var location = getSecondLocation
+And('User verifies the list of returned events is based on selected location -{int}-', (index) => {
+    var location = getLocations()[0][index-1]
     cy.request(EVENT_SERVICE_SEARCH+'?location='+location).then((response) => {
       const eventList = response.body.liveEvents
       events.getEvents().should('have.length', eventList.length)
   })
 })
 
-//Scenario-4 
+/* Scenario4: Search for events based on specialty + location */
 
 And('User selects option as {string}', (specialty) => {
     home.getFilterListBox().click().then(() => {
@@ -106,140 +164,10 @@ And('User selects option as {string}', (specialty) => {
     })    
 })
 
-And('User verifies the list of returned events is based on selected {string} & location', (specialty) => {
-  var location = getSecondLocation
+And('User verifies the list of returned events is based on selected {string} & location -{int}-', (specialty, index) => {
+  var location = getLocations()[0][index-1]
   cy.request(EVENT_SERVICE_SEARCH+'?specialty='+specialty+'&location='+location).then((response) => {
     const eventList = response.body.liveEvents
     events.getEvents().should('have.length', eventList.length)
 })
 })
-
-//Scenario5
-
-And('User selects the third location from list-box', () => {
-    home.getLocationFilter()
-    //cy.get('[data-test=live-event-search__location-option]')
-      .click()
-    //cy.get('[role=listbox] > div')
-    home.getFilterListBox()
-      .eq(2)
-      .click()
-})
-
-When('User selects the start date with current date', () => {
-    cy.get('[data-test=live-event-search__specialty-option]').clear().type('Any Specialty')
-    cy.get('#list-item-208-0 > .v-list-item__content > .v-list-item__title').click()
-    cy.get('[data-test=live-event-search__location-option]').clear().type('Any location')
-    cy.get('#list-item-189-0 > .v-list-item__content > .v-list-item__title').click()
-
-    cy.get('[data-test=live-event-search__start-date-select]').click()
-    cy.get('.v-date-picker-table__current').should('not.be.disabled').click()
-})
-
-And('User verifies the list of returned events is based on selected start date & selected location', () => {
-    var startDate = Cypress.moment().format('MM-DD-YYYY')
-
-    cy.get('#list-item-189-1 > .v-list-item__content').then((loc) => {
-        secondLocation = loc.text()
-    var location = secondLocation
-    var location = location.replace(",", "%2C");  
-    location=location.replace(" ", "%20");
-    console.log("location3: " + location)
-    cy.request('https://events-service.k8s.devint.medscape.com/events/search?startDate='+startDate+'&location='+location).then((response) => {
-        const eventList = response.body.liveEvents
-        cy.wait(2000)
-        cy.get('[data-test=live-event-preview]').should('have.length', eventList.length)
-    })
-})
-})
-
-And('User sees the query parameter as {string}+{string}+{string}+{string}+{string}+{string} attached to the end of url', (string1, specialty, string3, startDate, string5, location) => {
-    cy.get('#list-item-189-2 > .v-list-item__content').then((loc) => {
-    thirdLocation = loc.text()
-    var location = thirdLocation
-    var location = location.replace(",", "%2C");  
-    location=location.replace(" ", "%20");
-    console.log("location1: " + location)
-
-    var startDate = Cypress.moment().format('YYYY-MM-DD')
-    cy.url()
-      .should('contains', 'specialty='+specialty.toLowerCase()+'&startDate='+startDate+'&location='+location)
-    console.log(location)
-})
-
-//Scenario6
-
-When('User selects the end date with current date', () => {
-    cy.get('[data-test=live-event-search__location-option]').clear().type('Any location')
-    cy.get('#list-item-189-0 > .v-list-item__content > .v-list-item__title').click()
-    cy.get('.v-input__icon--clear').first().click()
-    cy.get('[data-test=live-event-search__end-date-select]').click()
-    cy.get('.v-date-picker-table__current').should('not.be.disabled').click()
-})
-
-And('User selects the fourth location from list-box', () => {
-    cy.get('[data-test=live-event-search__location-option]')
-      .click()
-    cy.get('[role=listbox] > div')
-      .eq(3)
-      .click()
-})
-
-And('User verifies the list of returned events is based on selected end date & selected location', () => {
-    var endDate = Cypress.moment().format('MM-DD-YYYY')
-
-    cy.get('#list-item-189-1 > .v-list-item__content').then((loc) => {
-        secondLocation = loc.text()
-    var location = secondLocation
-    var location = location.replace(",", "%2C");  
-    location=location.replace(" ", "%20");
-    console.log("location3: " + location)
-    cy.request('https://events-service.k8s.devint.medscape.com/events/search?endDate='+endDate+'&location='+location).then((response) => {
-        const eventList = response.body.liveEvents
-        cy.wait(3000)
-        cy.get('[data-test=live-event-preview]').should('have.length', eventList.length)
-    })
-})
-})
-})
-
-And('User sees the query parameter as {string}+{string}+{string}+{string}+{string}+{string}+{string}+{string} attached to the end of url', (string1, specialty, string3, startDate, string5, endDate, string7, location) => {
-    cy.get('#list-item-189-3 > .v-list-item__content').then((loc) => {
-    fourthLocation = loc.text()
-    var location = fourthLocation
-    //location = location.replace(",", "%2C");  
-    location=location.replace(" ", "%20");
-    console.log("location1: " + location)
-
-    var endDate = Cypress.moment().format('YYYY-MM-DD')
-    cy.url()
-      .should('contains', 'specialty='+specialty.toLowerCase()+'&endDate='+endDate+'&location='+location)
-    console.log(location)
-})
-})
-
-//Scenario7
-
-When('User selects the specialty', () => {
-    cy.get('[data-test=live-event-search__specialty-option]')
-      .click()
-    cy.get('#list-72 > div')
-      .eq(4)
-      .click()
-})
-
-And('User selects the location from list-box', () => {
-    cy.get('[data-test=live-event-search__location-option]')
-      .click()
-    cy.get('[role=listbox] > div')
-      .eq(1)
-      .click()
-})
-
-And('User selects the start date with current date & end date with future', () => {
-    var currentDate = Cypress.moment().format('YYYY-MM-DD')
-    var futureDate = Cypress.moment().add(45, 'days').format('YYYY-MM-DD')
-    console.log('currentDate' + currentDate)
-    cy.visit('/events?specialty=allspecialty&startDate='+currentDate+'&endDate='+futureDate)
-})
-

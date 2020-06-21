@@ -1,10 +1,17 @@
 /// <reference types="cypress" />
 
-import {Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
+import {Given, When, Then, And, Before} from "cypress-cucumber-preprocessor/steps";
 import Home from '../pages/Home';
+import {EVENT_SERVICE_SEARCH_FILTERS, EVENT_SERVICE_SEARCH} from '../support/global-constant.js'
 
 const home = new Home()
 
+
+
+/* beforeEach(() => {
+    
+  })
+ */
 /* Scenario1: Verify header on home screen */
 
 Given('User is on home screen', () => {
@@ -87,6 +94,10 @@ And('User verifies about button is clickable on sticky header', () => {
 })
 
 /* Scenario3: Verify sticky header on events screen */
+
+And('User clicks on Search button', () => {
+    home.getSearchButton().click()
+})
 
 When('User scroll down to the bottom of page', () => {
     cy.scrollTo('bottom')

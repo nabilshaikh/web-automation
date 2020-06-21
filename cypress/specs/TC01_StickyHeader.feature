@@ -26,7 +26,7 @@ Feature: Medscape-Live sticky header
     Scenario: Verify sticky header on events screen
         Given User is on home screen
         When User clicks on Search button
-        And User should navigate to "events" screen
+        And User should navigate to 'events' screen
         Then User should see the sticky header
         When User scroll down to the bottom of page
         Then User verifies sticky header does not get hide

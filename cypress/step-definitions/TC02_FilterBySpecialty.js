@@ -30,7 +30,6 @@ Then('User should see the list box which contains all possible specialties', () 
             });
             specDisp.forEach(($specialty) => {
                 home.getFilterListBox().then((el) => {
-                cy.wait(2000)
                 expect(el).to.contain($specialty)
             })
         })
